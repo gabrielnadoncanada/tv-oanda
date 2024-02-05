@@ -1,0 +1,26 @@
+{
+  "name": "netlify-oanda-tradingview",
+  "version": "1.0.0",
+  "description": "A project to connect TradingView strategy to Oanda's API using Netlify serverless functions",
+  "main": "netlify/functions/oanda.js",
+  "scripts": {
+    "start": "netlify dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "netlify",
+    "serverless",
+    "oanda",
+    "tradingview"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^2.58.0"
+  }
+}
+
