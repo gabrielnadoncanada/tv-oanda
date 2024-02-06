@@ -12,7 +12,7 @@ exports.handler = async (event, context) => {
     const {type, pair, amount, price} = JSON.parse(event.body);
     console.log('Parsed body:', {type, pair, amount, price}); // Log the parsed body
 
-    const url = `https://api-fxpractice.oanda.com/v3/accounts/${process.env.OANDA_ACCOUNT_ID}/orders`;
+    const url = `https://api-fxpractice.oanda.com/v3/accounts/101-002-28212823-002/orders`;
     const data = {
         order: {
             units: type === "buy" ? amount : `-${amount}`, // Positive for buy, negative for sell
@@ -27,7 +27,7 @@ exports.handler = async (event, context) => {
     const config = {
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.OANDA_API_KEY}`
+            'Authorization': `Bearer 0d01c916055937f23b957993ef026058-8a32de7d82fb9a7f0711a656497611d6`
         }
     };
 
