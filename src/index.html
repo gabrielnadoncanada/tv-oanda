@@ -9,7 +9,7 @@
     <button id="tradeBtn">Execute Trade</button>
     <script>
         document.getElementById('tradeBtn').addEventListener('click', function() {
-            fetch('http://localhost:8888/.netlify/functions/trade', {
+            fetch('https://gilded-alfajores-66f98b.netlify.app/.netlify/functions/trade', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
