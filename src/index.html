@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade with OANDA</title>
+</head>
+<body>
+    <button id="tradeBtn">Execute Trade</button>
+    <script>
+        document.getElementById('tradeBtn').addEventListener('click', function() {
+            fetch('http://localhost:8888/.netlify/functions/trade', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    type: 'buy', // or 'sell'
+                    pair: 'EURUSD', // currency pair
+                    amount: 1000, // amount to trade
+                    price: 'market' // or 'limit'
+                })
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+</html>
