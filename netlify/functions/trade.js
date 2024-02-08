@@ -9,16 +9,16 @@ exports.handler = async (event, context) => {
     console.log(process.env)
     console.log('Received event:', event); // Log the entire event
 
-    const {type, pair, amount, price} = JSON.parse(event.body);
-    console.log('Parsed body:', {type, pair, amount, price}); // Log the parsed body
+    const {action} = JSON.parse(event.body);
+    console.log('Parsed body:', {action}); // Log the parsed body
 
     const url = `https://api-fxpractice.oanda.com/v3/accounts/101-002-28212823-002/orders`;
     const data = {
         order: {
-            units: type === "buy" ? amount : `-${amount}`, // Positive for buy, negative for sell
-            instrument: pair.replace("USD", "_USD"), // Adjusting the pair format
+            units: action === "buy" ? 10000 : `-10000`, // Positive for buy, negative for sell
+            instrument: "USDCAD", // Adjusting the pair format
             timeInForce: 'FOK',
-            type: price === "market" ? 'MARKET' : 'LIMIT', // Assuming 'market' for market orders
+            type: 'MARKET', // Assuming 'market' for market orders
             positionFill: 'DEFAULT'
         }
     };
