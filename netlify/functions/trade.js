@@ -1,28 +1,19 @@
 const axios = require('axios');
 const process = require('process');
 require('dotenv').config();
+
 exports.handler = async (event, context) => {
     if (event.httpMethod !== 'POST') {
         return {statusCode: 405, body: 'Method Not Allowed'};
     }
 
-    console.log(process.env)
-    console.log('Received event:', event); // Log the entire event
-
     const {action} = JSON.parse(event.body);
-    console.log('Parsed body:', {action}); // Log the parsed body
 
     const url = `https://api-fxpractice.oanda.com/v3/accounts/101-002-28212823-002/orders`;
-    const data = {
-        order: {
-            units: action === "buy" ? 10000 : `-10000`, // Positive for buy, negative for sell
-            instrument: "USD_CAD", // Adjusting the pair format
-            timeInForce: 'FOK',
-            type: 'MARKET', // Assuming 'market' for market orders
-            positionFill: 'DEFAULT'
-        }
-    };
-    console.log('Sending data:', data); // Log the data being sent
+    const tradesUrl = `https://api-fxpractice.oanda.com/v3/accounts/101-002-28212823-002/openTrades`;
+    const tradesCloseUrl = `https://api-fxpractice.oanda.com/v3/accounts/101-002-28212823-002/trades`;
+
+    let units = 10000; // Default units
 
     const config = {
         headers: {
@@ -31,15 +22,39 @@ exports.handler = async (event, context) => {
         }
     };
 
+    // Fetch open trades
+    const responseTrades = await axios.get(tradesUrl, config);
+
+    // If there are open trades
+    if(responseTrades.data.trades.length > 0) {
+        const lastTrade = responseTrades.data.trades[responseTrades.data.trades.length - 1];
+
+        // If the last trade action is the same as the current action
+        if(lastTrade.currentUnits > 0 && action === "buy" || lastTrade.currentUnits < 0 && action === "sell") {
+            units *= 2; // Double the units
+        } else {
+            // Close the last trade
+            await axios.put(`${tradesCloseUrl}/${lastTrade.id}/close`, {}, config);
+        }
+    }
+
+    const data = {
+        order: {
+            units: action === "buy" ? units : `-` + units,
+            instrument: "USD_CAD",
+            timeInForce: 'FOK',
+            type: 'MARKET',
+            positionFill: 'DEFAULT'
+        }
+    };
+
     try {
         const response = await axios.post(url, data, config);
-        console.log('Received response:', response.data); // Log the received response
         return {
             statusCode: 200,
             body: JSON.stringify(response.data)
         };
     } catch (error) {
-        console.error("Error executing trade:", error.message);
         return {
             statusCode: error.response ? error.response.status : 500,
             body: JSON.stringify({message: error.message})
