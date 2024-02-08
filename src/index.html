@@ -6,19 +6,33 @@
     <title>Trade with OANDA</title>
 </head>
 <body>
-    <button id="tradeBtn">Execute Trade</button>
+    <button id="buy">BUY Trade</button>
+    <button id="sell">SELL Trade</button>
     <script>
-        document.getElementById('tradeBtn').addEventListener('click', function() {
-            fetch('https://gilded-alfajores-66f98b.netlify.app/.netlify/functions/trade', {
+        document.getElementById('buy').addEventListener('click', function() {
+            fetch('http://localhost:8888/.netlify/functions/trade', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    type: 'buy', // or 'sell'
-                    pair: 'EURUSD', // currency pair
-                    amount: 1000, // amount to trade
-                    price: 'market' // or 'limit'
+                    action: 'buy', // or 'sell'
+                })
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        });
+        document.getElementById('sell').addEventListener('click', function() {
+            fetch('http://localhost:8888/.netlify/functions/trade', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: 'sell', // or 'sell'
                 })
             })
                 .then(response => response.json())

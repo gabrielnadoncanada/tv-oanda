@@ -15,7 +15,7 @@ exports.handler = async (event, context) => {
     const url = `https://api-fxpractice.oanda.com/v3/accounts/101-002-28212823-002/orders`;
     const data = {
         order: {
-            units: action === "order buy" ? 10000 : `-10000`, // Positive for buy, negative for sell
+            units: action === "buy" ? 10000 : `-10000`, // Positive for buy, negative for sell
             instrument: "USD_CAD", // Adjusting the pair format
             timeInForce: 'FOK',
             type: 'MARKET', // Assuming 'market' for market orders
